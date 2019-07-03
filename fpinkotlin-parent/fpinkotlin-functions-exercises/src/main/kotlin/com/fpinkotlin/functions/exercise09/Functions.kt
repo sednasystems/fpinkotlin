@@ -9,7 +9,7 @@ fun triple(n: Int) = n * 3
 
 fun <T, U, V> compose(f: (U) -> V, g: (T) -> U): (T) -> V = { f(g(it)) }
 
-val add: (Int) -> (Int) -> Int = { a -> { b -> a + b} }
+val add: (Int) -> (Int) -> Int = { a -> { b -> a + b } }
 
 val compose = { x: (Int) -> Int -> { y: (Int) -> Int -> { z: Int -> x(y(z)) } } }
 
@@ -27,8 +27,8 @@ fun <T, U, V> higherAndThen(): ((T) -> U) -> ((U) -> V) -> (T) -> V =
         }
     }
 
-fun <A, B, C> partialA(a: A, f: (A) -> (B) -> C): (B) -> C =  f(a)
+fun <A, B, C> partialA(a: A, f: (A) -> (B) -> C): (B) -> C = f(a)
 
 fun <A, B, C> partialB(b: B, f: (A) -> (B) -> C): (A) -> C = { a: A -> f(a)(b) }
 
-fun  curried() = null// Define a function returning curried form of function(a: A, b: B, c: C, d: D)
+fun <A, B, C, D> curried(): (A) -> (B) -> (C) -> (D) -> String = { a -> { b -> { c -> { d -> "$a, $b, $c, $d" } } } }
