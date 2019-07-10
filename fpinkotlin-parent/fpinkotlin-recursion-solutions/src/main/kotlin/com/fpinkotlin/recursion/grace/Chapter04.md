@@ -79,3 +79,53 @@ fun fib(n: Int): BigInteger {
 
 ## Exercise 04
 
+The IDE complained about putting underscores in function names, so the convention
+adopted by the book won't work! haha
+
+I finished the exercise but didn't use a delimiter! And the test still passed. 
+
+```
+fun string(list: List<Char>): String {
+    tailrec fun makeString (acc: String, lst: List<Char>): String {
+        return when {
+            lst.isEmpty() -> ""
+            lst.size == 1 -> acc + lst.head()
+            else -> makeString(acc + lst.head(), lst.tail())
+        }
+    }
+    return makeString("", list)
+}
+```
+
+## Exercise 05
+
+The tests are missing `makeString`, which the book asks for. Also not sure why this fails in the tests:
+
+```
+fun <T, U> foldLeft(list: List<T>, z: U, f: (U, T) -> U): U {
+    tailrec fun helper(acc: U, lst: List<T>): U {
+        return when {
+            lst.isEmpty() -> acc
+            else -> helper(f(acc, list.head()), lst.tail())
+        }
+    }
+    return helper(z, list)
+}
+
+fun sum(list: List<Int>): Int = foldLeft(list, 0, Int::plus)
+
+fun string(list: List<Char>): String = foldLeft(list, "", String::plus)
+
+```
+
+## Exercise 06
+
+The tests already provided the `string` definition in terms of foldRight, but here's my foldRight anyway:
+
+```
+fun <T, U> foldRight(list: List<T>, identity: U, f: (T, U) -> U): U =
+    if (list.isEmpty())
+        identity
+    else
+        f(list.head(), foldRight(list.tail(), identity, f))
+```
