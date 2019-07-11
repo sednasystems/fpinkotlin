@@ -1,4 +1,4 @@
-# solutions to Chapter 4 Exercises
+# Solutions to Chapter 4 Exercises
 
 ## Exercise 01
 
@@ -7,7 +7,7 @@ like in the one of the toString() examples on page 83.
 But I see that the last example in 4.1.1 on pg 83 simple has
 an if-else statement for the function body.
 
-```
+```kotlin
 fun add(a: Int, b: Int): Int {
     tailrec fun add_(x: Int, y: Int): Int =
         if (x == 0) y else add_(inc(x), dec(y))
@@ -16,14 +16,14 @@ fun add(a: Int, b: Int): Int {
 ```
 
 Real solution:
-```
+```kotlin
 tailrec fun add(a: Int, b: Int): Int =
     if (a == 0) b else add(inc(a), dec(b))
 ```
 
 ## Exercise 02
 
-```
+```kotlin
 object Factorial {
     private lateinit var fact: (Int) -> Int
     init {
@@ -40,7 +40,7 @@ object Factorial {
 
 First, the loop-based Fibonacci implementation:
 
-```
+```kotlin
 fun fib(n: Int): BigInteger {
     var acc1: BigInteger = BigInteger.ZERO
     var acc2: BigInteger = BigInteger.ZERO
@@ -63,7 +63,7 @@ fun fib(n: Int): BigInteger {
 
 Then the tail-recursive function:
 
-```
+```kotlin
 fun fib(n: Int): BigInteger {
     tailrec fun fib_(acc1: BigInteger, acc2: BigInteger, x: Int): BigInteger {
         return when {
@@ -84,7 +84,7 @@ adopted by the book won't work! haha
 
 I finished the exercise but didn't use a delimiter! And the test still passed. 
 
-```
+```kotlin
 fun string(list: List<Char>): String {
     tailrec fun makeString (acc: String, lst: List<Char>): String {
         return when {
@@ -101,7 +101,7 @@ fun string(list: List<Char>): String {
 
 The tests are missing `makeString`, which the book asks for. Also not sure why this fails in the tests:
 
-```
+```kotlin
 fun <T, U> foldLeft(list: List<T>, z: U, f: (U, T) -> U): U {
     tailrec fun helper(acc: U, lst: List<T>): U {
         return when {
@@ -120,12 +120,54 @@ fun string(list: List<Char>): String = foldLeft(list, "", String::plus)
 
 ## Exercise 06
 
-The tests already provided the `string` definition in terms of foldRight, but here's my foldRight anyway:
-
-```
+```kotlin
 fun <T, U> foldRight(list: List<T>, identity: U, f: (T, U) -> U): U =
     if (list.isEmpty())
         identity
     else
         f(list.head(), foldRight(list.tail(), identity, f))
 ```
+
+Originally I was confused because the provided code already has implementations for `sum` and `string` that use `foldRight`,
+but I was supposed to use `prepend` to re-write the `string` implementation. Here we are:
+
+```kotlin
+fun string(list: List<Char>): String = foldRight(list, "") { a, b -> prepend(a, b)}
+
+fun prepend(c: Char, s: String): String = "$c$s"
+```
+
+## Exercise 07
+
+The test for exercise07 is importing from exercise08, and it looks like the reverse is true.
+
+After looking at the solution, my error here is providing an explicit lambda for prepend 
+instead of the function reference.
+
+```kotlin
+
+fun <T> prepend(list: List<T>, elem: T): List<T> = listOf(elem) + list
+
+fun <T> reverse(list: List<T>): List<T> = foldLeft(list, listOf()) { l, e -> prepend(l, e) }
+
+```
+
+## Exercise 08
+
+Q: Why is it such a big deal to pass an empty list in Ex07 anyway? Why are we making less-readable code
+in order to not have an empty list "trick"?
+
+I looked at the answer and think it's kinda dumb. I thought we'd be using the copy function! I thought 
+we were avoiding the use of listOf(elem)! What is going on! Anyway for reference, the answer that I 
+do not feel I earned:
+
+```kotlin
+
+fun <T> copy(list: List<T>): List<T> = foldLeft(list, listOf()) { l, e -> l + e }
+
+fun <T> prepend(list: List<T>, elem: T): List<T> = foldLeft(list, listOf(elem)) { l, e -> l + e }
+
+```
+
+## Exercise 09
+
