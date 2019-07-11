@@ -171,3 +171,25 @@ fun <T> prepend(list: List<T>, elem: T): List<T> = foldLeft(list, listOf(elem)) 
 
 ## Exercise 09
 
+I mis-read the signature for `add` in the IDE as requiring two arguments at first, so that was incorrect.
+Also once I changed to a `MutableList` the IDE let me know that my `var` could be a `val`. :) 
+
+I stopped the test run after 12 minutes of not completing, and this implementation seems to match the 
+solution in the book! haha
+
+```kotlin
+fun range(start: Int, end: Int): List<Int> {
+    val list: MutableList<Int> = mutableListOf()
+    var i = start
+
+    while (i < end) {
+        list.add(i)
+        i++
+    }
+
+    return list
+}
+```
+
+## Exercise 10
+
