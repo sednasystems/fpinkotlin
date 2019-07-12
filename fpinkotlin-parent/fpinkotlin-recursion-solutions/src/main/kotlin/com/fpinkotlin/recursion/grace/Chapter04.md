@@ -193,3 +193,36 @@ fun range(start: Int, end: Int): List<Int> {
 
 ## Exercise 10
 
+Since the book's answer is also running forever, I'll just point out my initial mistake
+was not assigning `i` to `f(i)`. That's something that I should have checked the IDE notification 
+about the `var` for, as it would have helped me see that `i` was not being reassigned to 
+any new value.
+
+```kotlin
+fun <T> unfold(seed: T, f: (T) -> T, p: (T) -> Boolean): List<T> {
+    val list: MutableList<T> = mutableListOf()
+    var i = seed
+
+    while (p(seed)) {
+        list.add(i)
+        i = f(i)
+    }
+
+    return list
+}
+
+```
+
+## Exercise 11
+
+```kotlin
+
+fun range(start: Int, end: Int): List<Int> = unfold(
+        seed = start,
+        f = { x -> x + 1 },
+        p = { x -> x < end }
+)
+```
+
+## Exercise 12
+
