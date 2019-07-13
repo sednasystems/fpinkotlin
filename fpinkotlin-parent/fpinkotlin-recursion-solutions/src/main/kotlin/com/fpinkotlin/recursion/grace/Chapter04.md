@@ -259,3 +259,84 @@ fun <T> unfold(seed: T, f: (T) -> T, p: (T) -> Boolean): List<T> {
     return helper(listOf(), seed)
 }
 ```
+
+## Exercise 15
+
+I looked at the hint, and decided to try to use previous functions:
+
+```kotlin
+fun <T> unfold(seed: T, f: (T) -> T, p: (T) -> Boolean): List<T> =
+    if (!p(seed))
+        listOf()
+    else
+        prepend(unfold(f(seed), f, p), seed)
+
+fun <T> prepend(list: List<T>, elem: T): List<T> = foldLeft(list, listOf(elem)) { l, e -> l + e }
+
+fun fibo(number: Int): String {
+    tailrec fun fib(acc1: Int, acc2: Int, x: Int): Int {
+        return when {
+            (x == 0) -> 1
+            (x > number) -> acc2
+            else -> fib(acc2, acc1 + acc2, x + 1)
+        }
+    }
+
+    return makeString(unfold(0, { x -> fib(0, 0, x) }, { x -> x == number }), ",")
+}
+
+fun <T> makeString(list: List<T>, separator: String): String =
+    when {
+        list.isEmpty() -> ""
+        list.size == 1 -> "${list.tail()}"
+        else -> "${list.head()}$separator" + makeString(list.tail(), separator)
+    }
+```
+
+Then I tried to first evaluate my solution by hand, and then print out the function calls during 
+the test run, and I realized the test can be cheated with my solution above. Whoops!
+
+## Exercise 16
+
+My solution differs from the book because I added an extra helper parameter:
+
+```kotlin
+fun <T> iterate(seed: T, f: (T) -> T, n: Int): List<T> {
+    tailrec fun helper(acc: List<T>, seed: T, total: Int): List<T> =
+        if (total < n)
+            helper(acc + seed, f(seed), total + 1)
+        else acc
+    return helper(listOf(), seed, 0)
+}
+```
+
+## Exercise 17
+
+```kotlin
+fun <T, U> map(list: List<T>, f: (T) -> U): List<U> {
+    tailrec fun helper(acc: List<U>, lst: List<T>): List<U> =
+        if (lst.isEmpty())
+            acc
+        else
+            helper(acc + f(lst.head()), lst.tail())
+
+    return helper(listOf(), list)
+}
+```
+
+## Exercise 18
+
+I originally was trying to write this as a tail-recursive function because I thought that
+tail-recursive functions can be transformed into corecursive functions -- and I thought
+that is what Kotlin is doing. However, the internet says that TCE actually just creates
+an iterative loop in the bytecode, so TIL.
+
+```kotlin
+fun fiboCorecursive(number: Int): String {
+    val seed = Pair(0, 1)
+    val f = { (x, y): Pair<Int, Int> -> Pair(y, x + y) }
+    val pairs = iterate(seed, f, number + 1)
+    val list = map(pairs) { it.first }
+    return makeString(list, ",")
+}
+```
