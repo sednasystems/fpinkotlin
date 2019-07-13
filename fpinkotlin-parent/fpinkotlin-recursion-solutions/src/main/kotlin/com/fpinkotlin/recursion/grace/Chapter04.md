@@ -194,9 +194,9 @@ fun range(start: Int, end: Int): List<Int> {
 ## Exercise 10
 
 Since the book's answer is also running forever, I'll just point out my initial mistake
-was not assigning `i` to `f(i)`. That's something that I should have checked the IDE notification 
-about the `var` for, as it would have helped me see that `i` was not being reassigned to 
-any new value.
+was not assigning `i` to `f(i)`. That's something that I should have checked the IDE 
+notification about the `var` for, as it would have helped me see that `i` was not being 
+reassigned to any new value.
 
 ```kotlin
 fun <T> unfold(seed: T, f: (T) -> T, p: (T) -> Boolean): List<T> {
@@ -226,3 +226,36 @@ fun range(start: Int, end: Int): List<Int> = unfold(
 
 ## Exercise 12
 
+```kotlin
+fun range(start: Int, end: Int): List<Int> =
+    if (start >= end)
+        listOf()
+    else
+        prepend(range(start + 1, end), start)
+```
+
+## Exercise 13
+
+```kotlin
+fun <T> unfold(seed: T, f: (T) -> T, p: (T) -> Boolean): List<T> =
+    if (!p(seed))
+        listOf()
+    else
+        prepend(unfold(f(seed), f, p), seed)
+```
+
+## Exercise 14
+
+Honestly It took several looks in the book to get to this solution,
+which does not cease execution in my IDE. I had trouble with this one.
+
+```kotlin
+fun <T> unfold(seed: T, f: (T) -> T, p: (T) -> Boolean): List<T> {
+    tailrec fun helper(acc: List<T>, newSeed: T): List<T> =
+        if (!p(seed))
+            acc
+        else
+            helper(acc + seed, f(newSeed))
+    return helper(listOf(), seed)
+}
+```
