@@ -17,7 +17,7 @@ class ListTest: StringSpec() {
         }
 
         "length" {
-            forAll(com.fpinkotlin.lists.exercise08.IntListGenerator()) { (first, second) ->
+            forAll(IntListGenerator()) { (first, second) ->
                 second.length() == first.size
             }
         }

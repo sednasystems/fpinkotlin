@@ -107,38 +107,56 @@ fun reverse(): List<A> = reverse(List.invoke(), this)
 
 ## Exercise 06
 
+Solution said it won't compile, so, hooray?
+
 ```kotlin
 
+fun sum(ints: List<Int>): Int = when (ints) {
+    List.Nil -> 0
+    is List.Cons -> ints.head + sum(ints.tail)
+}
 ```
 
 ## Exercise 07
 
 ```kotlin
-
+fun product(ints: List<Double>): Double = when (ints) {
+    List.Nil -> 1.0
+    is List.Cons -> ints.head * product(ints.tail)
+}
 ```
 
 ## Exercise 08
 
 ```kotlin
-
+    fun length(): Int = foldRight(this,0) { _ -> { it + 1 } }
 ```
 
 ## Exercise 09
 
-```kotlin
+The companion object already has foldLeft in the exercise code! 
 
+```kotlin
+    fun <B> foldLeft(identity: B, f: (B) -> (A) -> B): B = foldLeft(identity, this, f)
 ```
 
 ## Exercise 10
 
+The test code was referring to exercise08's `length` instead of Ex10; now fixed.
+
 ```kotlin
+fun length(): Int = foldLeft(0) { x -> { x + 1 } }
+
+fun sum(list: List<Int>): Int = list.foldLeft(0) { x -> { y -> x + y } }
+
+fun product(list: List<Double>): Double = list.foldLeft(1.0) { x -> { y -> x * y } }
 
 ```
 
 ## Exercise 11
 
 ```kotlin
-
+fun reverse(): List<A> = foldLeft(List.invoke()) { x -> { a -> x.cons(a) } }
 ```
 
 ## Exercise 12
